@@ -222,9 +222,10 @@ helper() {
       for j in "$i"/*;
       do
         file=$(basename $j)
-        ext="${file##.*}"
+        ext="${file##*.}"
         if [[ "$ext" == "txt" || "$ext" == "$file" ]]; then
-          echo "$j"
+          # echo "$j"
+          rm "$j"
         fi
       done
     fi
@@ -293,7 +294,10 @@ curr=$(pwd)
 
 check_subs "$dir" "$curr"
 
-helper "$dir"
+# helper "$dir"
+# bash Helper.sh "$dir"
 
-ls -a
+
+# /mnt/d/OS/Offline1/Assignment
+
 
