@@ -20,23 +20,26 @@ check_allowed_archs() {
 check_lang() {
   valid=("c" "cpp" "python" "sh")
   read -r -a given <<< "$1"
-  for lang in "${given[@]}";
+  for l in "${given[@]}";
   do
-    if [[ ! "${valid[@]}" =~ "$lang" ]]; then
-      echo "The Language: "$lang" is not supported."
+    if [[ ! "${valid[@]}" =~ "$l" ]]; then
+      echo "The Language: "$l" is not supported."
       exit 1
     fi
   done
 }
 
 check_file_lang() {
-  valid=("c" "cpp" "sh" "python")
   read -r ext <<< "$1"
+  read -a valid <<< "$2"
   # echo "$ext"
-  if [[ ! "${valid[@]}" =~ "$ext" ]]; then
-    echo "The language is not supported."
-    return 1
-  fi
+  for lang in "${valid[@]}"; do
+    if [[ "$ext" == "$lang" ]]; then
+      return 0
+    fi
+  done
+  echo "The language is not supported."
+  return 1
 }
 
 check_ints() {
@@ -138,7 +141,7 @@ init_csv() {
   for((id=strt;id<=end;id++));
   do
     if ! grep -q "^$id", "$marks_csv"; then
-      echo "$id,$tot,0,$tot,Not graded" >> "$marks_csv"
+      echo "$id,$tot,0,$tot," >> "$marks_csv"
     fi
   done
 }
@@ -165,12 +168,27 @@ check_inside_folder() {
       echo "A file has different ID."
       return 1
     fi
-    if [[ "$ext" != "cpp" && "$ext" != "c" && "$ext" != "py" && "$ext" != "sh" ]]; then
+    # if [[ "$ext" != "cpp" && "$ext" != "c" && "$ext" != "py" && "$ext" != "sh" ]]; then
+    #   echo "File extension not valid."
+    #   return 1
+    # fi
+    check_file_lang "$ext" "$2"
+    if [[ "$?" -ne 0 ]]; then
       echo "File extension not valid."
       return 1
     fi
   done
   return 0
+}
+
+check_format() {
+  arch_frmts="$2"
+  ext="$1"
+  if echo "$arch_frmts" | grep -wq "$ext"; then
+    return 0
+  else 
+    return 1
+  fi
 }
 
 
@@ -205,6 +223,12 @@ unzip_subs() {
       update_marks_csv "$ID" "$tot" "$tot" "NA" "Isssue case-2: Skipped eval. Not an archived file."
       mv "$i" "issues/"
       continue;
+    fi
+    check_format "$ext" "$6"
+    if [[ "$?" -ne 0 ]]; then
+      update_marks_csv "$ID" "0" "$tot" "NA" "Issue case 2: Skipped eval"
+      mv "$i" "issues/"
+      continue
     fi
     if [[ "$ext" == "zip" ]]; then
       # unzip "$i" -d "$workingDir"
@@ -251,7 +275,7 @@ create_Dirs() {
     ID="${filename%.*}"
     if [[ -d "$i" ]]; then
       FolderDir="$i"
-      check_inside_folder "$workingDir/$filename"
+      check_inside_folder "$workingDir/$filename" "$4"
       if [[ "$?" -ne 0 ]]; then
         update_marks_csv "$ID" "0" "$tot" "$tot" "Issue case 4: Skipped eval. Not a valid folder."
         mv "$FolderDir" "issues/"
@@ -261,7 +285,7 @@ create_Dirs() {
     if [[ "$ext" == "txt" || "$ext" == "tar" || "$ext" == "zip" ||  "$ext" == "rar" ]]; then 
       continue
     fi
-    check_file_lang "$ext"
+    check_file_lang "$ext" "$4"
     if [[ $? -ne 0 ]]; then
       update_marks_csv "$ID" "0" "$tot" "$tot" "Issue case 3"
       mv "$i" "issues/"
@@ -323,13 +347,15 @@ compare() {
 }
 
 finalize() {
+  dir="$1"
   read -r strt end <<< "$2"
   for((i=strt;i <= end; ++i)); do
-    if grep -q "^$i", "$marks_csv"; then
+    folder="$dir/$i"
+    if [[ ! -d "$folder" ]]; then
       awk -F, -v _ID="$i" '
       BEGIN { OFS = FS }
       $1 == _ID {
-        if($5 == "Not graded"){
+        if($5 == ""){
           $2=0
           $3=$4
           $5="Did not submit"
@@ -347,8 +373,8 @@ finalize() {
 }
 
 check_plag() {
-  if [[ ! -f  "Plagiarism.txt" ]]; then
-    touch "Plagiarism.txt"
+  if [[ ! -f  "$2" ]]; then
+    touch "$2"
   fi
   dir="$1"
   files=("$dir"/*)
@@ -372,7 +398,7 @@ check_plag() {
           file2="$f"
         fi
       done
-      compare_files "$file1" "$file2"
+      compare_files "$file1" "$file2" "$2"
     done
   done
 }
@@ -390,7 +416,7 @@ compare_files() {
 
   diff_out=$(diff -q "$f1" "$f2")
   if [[ -z "$diff_out" ]]; then
-     echo "$base_f1" "$base_f2" >> "Plagiarism.txt" 
+     echo "$base_f1" "$base_f2" >> "$3" 
      ID1="${base_f1%.*}"
      ID2="${base_f2%.*}"
      if grep -q "^$ID1", "$marks_csv"; then
@@ -462,19 +488,18 @@ if [[ "$arch" != "true" && "$arch" != "false" ]]; then
   exit 1
 fi
 
+dir="$(pwd)/$dir"
+
 check_allowed_archs "$arch_frmt"
 
 check_ints "$tot" "$penal_guide" "$penal_plag" "$penal_match" 
 
 check_paths "$dir" "$correct_output"
 
+
 check_lang "$lang"
 
 check_range "$range"
-
-declare -A remarks
-declare -A marks
-declare -A deduc
 
 
 if [[ ! -d "issues" ]]; then
@@ -487,9 +512,12 @@ fi
 
 init_csv "$range" "$tot"
 
-unzip_subs "$dir" "$range" "$arch" "$tot" "$penal_guide"
+check_format "zip" "$arch_frmt"
 
-create_Dirs "$dir" "$range" "$tot"
+
+unzip_subs "$dir" "$range" "$arch" "$tot" "$penal_guide" "$arch_frmt"
+
+create_Dirs "$dir" "$range" "$tot" "$lang"
 
 curr=$(pwd)
 
@@ -499,7 +527,7 @@ macth_outputs "$dir" "$penal_match"
 
 finalize "$dir" "$range"
 
-check_plag "$dir"
+check_plag "$dir" "$plag"
 
 
 

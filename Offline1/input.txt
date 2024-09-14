@@ -3,9 +3,9 @@ zip rar
 python c cpp sh
 100
 5
-/mnt/d/OS/Offline1/Assignment
+Assignment
 2005001 2005010
-/mnt/d/OS/Offline1/Assignment/expected_output.txt
+Assignment/expected_output.txt
 10
-/home/assignment/plagiarism.txt
+plagiarism.txt
 100
