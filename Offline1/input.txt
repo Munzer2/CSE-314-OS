@@ -4,8 +4,8 @@ python c cpp sh
 100
 5
 /mnt/d/OS/Offline1/Assignment
-2005001 2005121
+2005001 2005010
 /mnt/d/OS/Offline1/Assignment/expected_output.txt
-100
+10
 /home/assignment/plagiarism.txt
 100
