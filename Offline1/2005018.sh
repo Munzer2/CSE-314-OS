@@ -185,6 +185,7 @@ unzip_subs() {
     filename=$(basename $i)
     ext="${filename##*.}"
     ID="${filename%.*}"
+    # echo "$ID $ext" 
     if [[ "$ID" == "expected_output" ]]; then
       continue
     fi
@@ -197,11 +198,11 @@ unzip_subs() {
       continue;
     fi
     if [[ -d "$i" ]]; then
-      update_marks_csv "$ID" "NA" "$penal_guide" "NA" "Issue-1"
+      update_marks_csv "$ID" "NA" "$penal_guide" "NA" "Issue case 1"
       continue
     fi
     if [[ "$ext" == "py" || "$ext" == "sh" || "$ext" == "cpp" || "$ext" == "c" ]]; then
-      update_marks_csv "$ID" "0" "$tot" "NA" "Skipped eval. Wrong format submission."
+      update_marks_csv "$ID" "$tot" "$tot" "NA" "Isssue case-2: Skipped eval. Not an archived file."
       mv "$i" "issues/"
       continue;
     fi
@@ -214,7 +215,7 @@ unzip_subs() {
       (cd "$workingDir" && unrar e "$filename")
     else
       ### means bad arch format but valid ID.WIll skip eval. will set remarks[ID] = "skipped"
-      update_marks_csv "$ID" "0" "$tot" "NA" "Issue-2. Skipped eval"
+      update_marks_csv "$ID" "0" "$tot" "NA" "Issue case 2: Skipped eval"
       mv "$i" "issues/"
     fi
   done
@@ -252,7 +253,7 @@ create_Dirs() {
       FolderDir="$i"
       check_inside_folder "$workingDir/$filename"
       if [[ "$?" -ne 0 ]]; then
-        update_marks_csv "$ID" "0" "$tot" "$tot" "Skipped eval. Not a valid folder."
+        update_marks_csv "$ID" "0" "$tot" "$tot" "Issue case 4: Skipped eval. Not a valid folder."
         mv "$FolderDir" "issues/"
       fi
       continue
@@ -262,7 +263,7 @@ create_Dirs() {
     fi
     check_file_lang "$ext"
     if [[ $? -ne 0 ]]; then
-      update_marks_csv "$ID" "0" "$tot" "$tot" "Issue-3"
+      update_marks_csv "$ID" "0" "$tot" "$tot" "Issue case 3"
       mv "$i" "issues/"
       continue
     fi
@@ -324,8 +325,97 @@ compare() {
 finalize() {
   read -r strt end <<< "$2"
   for((i=strt;i <= end; ++i)); do
-    echo "$i"
+    if grep -q "^$i", "$marks_csv"; then
+      awk -F, -v _ID="$i" '
+      BEGIN { OFS = FS }
+      $1 == _ID {
+        if($5 == "Not graded"){
+          $2=0
+          $3=$4
+          $5="Did not submit"
+        }
+      }
+      { print }
+      ' "$marks_csv" > temp.csv && mv temp.csv "$marks_csv"
+    fi
   done
+  # dir="$1"
+  # for i in "$dir"/*;
+  # do
+  #   mv "$i" "checked/"
+  # done
+}
+
+check_plag() {
+  if [[ ! -f  "Plagiarism.txt" ]]; then
+    touch "Plagiarism.txt"
+  fi
+  dir="$1"
+  files=("$dir"/*)
+  for((i=0; i<${#files[@]}-1;++i)); do
+    folder1="${files[$i]}"
+    file1=""
+    for f in "$folder1"/*; do
+      ext=$(basename $f)
+      ext="${ext##*.}"
+      if [[ "$ext" == "py" || "$ext" == "cpp" || "$ext" == "c" || "$ext" == "sh" ]]; then
+        file1="$f"
+      fi
+    done
+    for((j=i+1; j < ${#files[@]};++j)); do
+      folder2="${files[$j]}"
+      file2=""
+      for f in "$folder2"/*; do
+        ext=$(basename $f)
+        ext="${ext##*.}"
+        if [[ "$ext" == "py" || "$ext" == "cpp" || "$ext" == "c" || "$ext" == "sh" ]]; then
+          file2="$f"
+        fi
+      done
+      compare_files "$file1" "$file2"
+    done
+  done
+}
+
+compare_files() {
+  f1="$1"
+  f2="$2"
+
+  if [[ -z "$f1" || -z "$f2" ]]; then
+    return 1
+  fi
+
+  base_f1=$(basename $f1)
+  base_f2=$(basename $f2)
+
+  diff_out=$(diff -q "$f1" "$f2")
+  if [[ -z "$diff_out" ]]; then
+     echo "$base_f1" "$base_f2" >> "Plagiarism.txt" 
+     ID1="${base_f1%.*}"
+     ID2="${base_f2%.*}"
+     if grep -q "^$ID1", "$marks_csv"; then
+        awk -F, -v _ID="$ID1" '
+        BEGIN { OFS = FS }
+        $1 == _ID {
+          $5= "Plagiarism detected."
+          $2= 0
+          $3 = $4
+        }
+        { print }
+        ' "$marks_csv" > temp.csv && mv temp.csv "$marks_csv"
+     fi
+     if grep -q "^$ID2", "$marks_csv"; then
+        awk -F, -v _ID="$ID2" '
+        BEGIN { OFS = FS }
+        $1 == _ID {
+          $5= "Plagiarism detected."
+          $2= 0
+          $3 = $4
+        }
+        { print }
+        ' "$marks_csv" > temp.csv && mv temp.csv "$marks_csv"
+     fi
+    fi
 }
 
 
@@ -409,6 +499,7 @@ macth_outputs "$dir" "$penal_match"
 
 finalize "$dir" "$range"
 
+check_plag "$dir"
 
 
 
