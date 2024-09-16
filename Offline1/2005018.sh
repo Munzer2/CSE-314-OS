@@ -23,7 +23,7 @@ check_lang() {
   for l in "${given[@]}";
   do
     if [[ ! "${valid[@]}" =~ "$l" ]]; then
-      echo "The Language: "$l" is not supported."
+      # echo "The Language: "$l" is not supported."
       exit 1
     fi
   done
@@ -38,7 +38,7 @@ check_file_lang() {
       return 0
     fi
   done
-  echo "The language is not supported."
+  # echo "The language is not supported."
   return 1
 }
 
@@ -166,16 +166,12 @@ check_inside_folder() {
     curr_ID="${curr_ID%.*}"
     if [[ "$ID" -ne "$curr_ID" ]]; then
       echo "A file has different ID."
-      return 1
+      return 2
     fi
-    # if [[ "$ext" != "cpp" && "$ext" != "c" && "$ext" != "py" && "$ext" != "sh" ]]; then
-    #   echo "File extension not valid."
-    #   return 1
-    # fi
     check_file_lang "$ext" "$2"
     if [[ "$?" -ne 0 ]]; then
       echo "File extension not valid."
-      return 1
+      return 3
     fi
   done
   return 0
@@ -198,13 +194,15 @@ unzip_subs() {
   arch="$3"
   tot="$4"
   penal_guide="$5"
+  correct_out="$7"
+  correct_out=$(basename $correct_out)
   for i in "$workingDir"/*;
   do
     filename=$(basename $i)
     ext="${filename##*.}"
     ID="${filename%.*}"
     # echo "$ID $ext" 
-    if [[ "$ID" == "expected_output" ]]; then
+    if [[ "$filename" == "$correct_out" ]]; then
       continue
     fi
     re='^[0-9]+$'
@@ -230,9 +228,10 @@ unzip_subs() {
       mv "$i" "issues/"
       continue
     fi
+    pre_ext=$(ls "$workingDir")
     if [[ "$ext" == "zip" ]]; then
       # unzip "$i" -d "$workingDir"
-      (cd "$workingDir" && unzip "$filename")
+      (cd "$workingDir" && unzip -q "$filename")
     elif [[ "$ext" == "tar" ]]; then
       (cd "$workingDir" && tar -xvf "$filename")
     elif [[ "$ext" == "rar" ]]; then
@@ -241,6 +240,14 @@ unzip_subs() {
       ### means bad arch format but valid ID.WIll skip eval. will set remarks[ID] = "skipped"
       update_marks_csv "$ID" "0" "$tot" "NA" "Issue case 2: Skipped eval"
       mv "$i" "issues/"
+    fi
+    post_ext=$(ls "$workingDir")
+    ext_stuff_full=$(comm -13 <(echo "$pre_ext") <(echo "$post_ext"))
+    ext_stuff="${ext_stuff_full%.*}"
+    # echo "$ext_stuff"
+    if [[ "$ext_stuff" != "$ID" ]]; then
+      update_marks_csv "$ID" "0" "$tot" "NA" "Issue case 4: Skipped eval"
+      mv "$workingDir/$ext_stuff_full" "issues/"
     fi
   done
 }
@@ -276,8 +283,13 @@ create_Dirs() {
     if [[ -d "$i" ]]; then
       FolderDir="$i"
       check_inside_folder "$workingDir/$filename" "$4"
-      if [[ "$?" -ne 0 ]]; then
-        update_marks_csv "$ID" "0" "$tot" "$tot" "Issue case 4: Skipped eval. Not a valid folder."
+      status="$?"
+      if [[ "$status" -ne 0 ]]; then
+        if [[ "$status" -eq 3 ]]; then
+          update_marks_csv "$ID" "0" "$tot" "$tot" "Issue case 3"
+        else
+          update_marks_csv "$ID" "0" "$tot" "$tot" "Skipped eval. Not a valid folder." 
+        fi
         mv "$FolderDir" "issues/"
       fi
       continue
@@ -515,7 +527,7 @@ init_csv "$range" "$tot"
 check_format "zip" "$arch_frmt"
 
 
-unzip_subs "$dir" "$range" "$arch" "$tot" "$penal_guide" "$arch_frmt"
+unzip_subs "$dir" "$range" "$arch" "$tot" "$penal_guide" "$arch_frmt" "$correct_output"
 
 create_Dirs "$dir" "$range" "$tot" "$lang"
 
