@@ -8,6 +8,7 @@
 #include <chrono>
 #define GALLERY_1_LIM 5
 #define corridor_DE_LIM 3
+#define Sleep_mul 100
 
 using namespace std; 
 
@@ -45,9 +46,9 @@ int get_random_number() {
 
 
 void print_mssg(string mssg) {
-    // pthread_mutex_lock(&print_lock);
+    pthread_mutex_lock(&print_lock);
     cout << mssg;
-    // pthread_mutex_unlock(&print_lock); 
+    pthread_mutex_unlock(&print_lock); 
 }
 
 class _visitor {
@@ -80,13 +81,15 @@ long get_timestamp() {
 void Premium(int ID, int _wait) {
     pthread_mutex_lock(&PremLock); 
     prem_cnt++;
-    if(prem_cnt == 1) pthread_mutex_lock(&accessLock);
+    if(prem_cnt == 1) {
+        pthread_mutex_lock(&accessLock);
+    }
     pthread_mutex_unlock(&PremLock); 
 
     pthread_mutex_lock(&PBLock); 
     ///Take time using the photo booth.
     print_mssg("Visitor " + to_string(ID) + " is inside the photobooth at timestamp " + to_string(get_timestamp()) + "\n");
-    sleep(_wait); 
+    usleep(_wait*2000); 
     pthread_mutex_unlock(&PBLock);
 
     pthread_mutex_lock(&PremLock); 
@@ -107,7 +110,7 @@ void Standard(int ID, int _wait) {
     pthread_mutex_unlock(&accessLock); 
     print_mssg("Visitor " + to_string(ID) + " is inside the photobooth at timestamp " + to_string(get_timestamp()) + "\n");
     ///Take time using the PB
-    sleep(_wait); 
+    usleep(_wait*2000); 
     pthread_mutex_lock(&standLock); 
     st_cnt--;
     if(st_cnt == 0) pthread_mutex_unlock(&PBLock); 
@@ -117,41 +120,41 @@ void Standard(int ID, int _wait) {
 
 void *visitMuseam(void *arg) {
     _visitor *vis = (_visitor *)arg; 
-    sleep(get_random_number()%4 + 1);
+    usleep(get_random_number()%1000 + 1000);
     print_mssg("Visitor " + to_string(vis->ID) + " has arrived at A at timestamp " + to_string(get_timestamp()) + "\n");   
-    sleep((vis->w == 0 ? 1 : vis->w)); 
+    usleep((vis->w == 0 ? 1000 : vis->w*1000)); 
     pthread_mutex_lock(&stairs[0]);
     print_mssg("Visitor " + to_string(vis->ID) + " is at step-1 at timestamp " + to_string(get_timestamp()) +  "\n");
-    sleep(1); 
+    usleep(1000); 
     pthread_mutex_lock(&stairs[1]);
     pthread_mutex_unlock(&stairs[0]);
     print_mssg("Visitor " + to_string(vis->ID) + " is at step 2 at timestamp " + to_string(get_timestamp()) + "\n");
-    sleep(1); 
+    usleep(1000); 
     pthread_mutex_lock(&stairs[2]); 
     pthread_mutex_unlock(&stairs[1]);
     print_mssg("Visitor " + to_string(vis->ID) + " is at step 3 at timestamp " + to_string(get_timestamp()) + "\n");
-    sleep(1);
+    usleep(1000);
 
     sem_wait(&gal1_cap);
     pthread_mutex_unlock(&stairs[2]);   
     print_mssg("Visitor " + to_string(vis->ID) + " is at C (entered Gallery 1) at timestamp " + to_string(get_timestamp()) + "\n");
 
-    sleep(vis->x + 1); 
+    usleep(vis->x * 1000); 
 
     sem_wait(&corr_DE_cap);   
     sem_post(&gal1_cap); 
     print_mssg("Visitor " + to_string(vis->ID) + " is at D (exiting Gallery 1) at timestamp " + to_string(get_timestamp()) + "\n");
 
-    sleep(1); ///arbitrary delay at the corridor.
+    usleep(3000); ///arbitrary delay at the corridor.
     sem_post(&corr_DE_cap);
 
     print_mssg("Visitor " + to_string(vis->ID) + " is at E (entered Gallery 2) at timestamp " + to_string(get_timestamp()) + "\n");
 
-    sleep(vis->y+1);
+    usleep(vis->y* 1000);
 
     print_mssg("Visitor " + to_string(vis->ID) + " is about to enter the photobooth at timestamp " + to_string(get_timestamp()) + "\n");
 
-    sleep(1);
+    usleep(1000);
 
     if(vis->ID <= 1100) { ///standard ticket holder. 
         Standard(vis->ID,vis->w); 
@@ -165,9 +168,9 @@ void *visitMuseam(void *arg) {
 
 
 
-int main() {
+int main(int argc, char *argv[]) {
     int N , M, w, x, y, z; 
-    cin >> N >> M >> w >> x >> y >> z; 
+    N = atoi(argv[1]),M = atoi(argv[2]),w = atoi(argv[3]),x = atoi(argv[4]),y = atoi(argv[5]), z = atoi(argv[6]); 
     _init();
     pthread_t threads[N+M]; 
     vector<_visitor> all_visitors(N+M); 
