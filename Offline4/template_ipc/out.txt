@@ -1,0 +1,30 @@
+Student 4 started writing for 7 ms at 1 ms
+Student 9 started writing for 20 ms at 2 ms
+Student 1 started writing for 19 ms at 4 ms
+Student 5 started writing for 5 ms at 5 ms
+Student 3 started writing for 19 ms at 6 ms
+Student 4 finished writing at 9 ms
+Student 10 started writing for 2 ms at 9 ms
+Student 6 started writing for 1 ms at 10 ms
+Student 5 finished writing at 10 ms
+Student 4 has arrived at the print station at 11 ms
+Student 10 finished writing at 11 ms
+Student 6 finished writing at 11 ms
+Student 5 has arrived at the print station at 12 ms
+Student 8 started writing for 12 ms at 12 ms
+Student 10 has arrived at the print station at 12 ms
+Student 2 started writing for 15 ms at 13 ms
+Student 7 started writing for 8 ms at 14 ms
+Student 6 has arrived at the print station at 17 ms
+Student 7 finished writing at 23 ms
+Student 1 finished writing at 23 ms
+Student 9 finished writing at 24 ms
+Student 8 finished writing at 24 ms
+Student 9 has arrived at the print station at 25 ms
+Student 1 has arrived at the print station at 26 ms
+Student 3 finished writing at 26 ms
+Student 2 finished writing at 28 ms
+Student 8 has arrived at the print station at 31 ms
+Student 7 has arrived at the print station at 33 ms
+Student 3 has arrived at the print station at 34 ms
+Student 2 has arrived at the print station at 36 ms

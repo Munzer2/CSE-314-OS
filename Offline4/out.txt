@@ -1,0 +1,145 @@
+10 6 2 6 6 3
+Visitor 1002 has arrived at A at timestamp 15070
+Visitor 1007 has arrived at A at timestamp 15070
+Visitor 2006 has arrived at A at timestamp 15071
+Visitor 2002 has arrived at A at timestamp 15070
+Visitor 1006 has arrived at A at timestamp 15070
+Visitor 1001 has arrived at A at timestamp 16070
+Visitor 1008 has arrived at A at timestamp 16070
+Visitor 1009 has arrived at A at timestamp 16071
+Visitor 1004 has arrived at A at timestamp 17070
+Visitor 1005 has arrived at A at timestamp 17070
+Visitor 1010 has arrived at A at timestamp 17070
+Visitor 2001 has arrived at A at timestamp 17070
+Visitor 1007 is at step-1 at timestamp 17072
+Visitor 1003 has arrived at A at timestamp 18070
+Visitor 2004 has arrived at A at timestamp 18071
+Visitor 2003 has arrived at A at timestamp 18071
+Visitor 2005 has arrived at A at timestamp 18071
+Visitor 1009 is at step-1 at timestamp 18072
+Visitor 1007 is at step 2 at timestamp 18072
+Visitor 1007 is at step 3 at timestamp 19073
+Visitor 1009 is at step 2 at timestamp 19073
+Visitor 1002 is at step-1 at timestamp 19073
+Visitor 1007 is at C (entered Gallery 1) at timestamp 20073
+Visitor 1002 is at step 2 at timestamp 20074
+Visitor 2002 is at step-1 at timestamp 20074
+Visitor 1009 is at step 3 at timestamp 20074
+Visitor 1009 is at C (entered Gallery 1) at timestamp 21075
+Visitor 1002 is at step 3 at timestamp 21075
+Visitor 2002 is at step 2 at timestamp 21075
+Visitor 1006 is at step-1 at timestamp 21075
+Visitor 1002 is at C (entered Gallery 1) at timestamp 22075
+Visitor 1006 is at step 2 at timestamp 22076
+Visitor 2002 is at step 3 at timestamp 22076
+Visitor 1001 is at step-1 at timestamp 22076
+Visitor 2002 is at C (entered Gallery 1) at timestamp 23076
+Visitor 1006 is at step 3 at timestamp 23077
+Visitor 1001 is at step 2 at timestamp 23077
+Visitor 1008 is at step-1 at timestamp 23077
+Visitor 1006 is at C (entered Gallery 1) at timestamp 24077
+Visitor 1001 is at step 3 at timestamp 24077
+Visitor 1008 is at step 2 at timestamp 24078
+Visitor 2006 is at step-1 at timestamp 24078
+Visitor 1007 is at D (exiting Gallery 1) at timestamp 26074
+Visitor 1001 is at C (entered Gallery 1) at timestamp 26075
+Visitor 1008 is at step 3 at timestamp 26075
+Visitor 2006 is at step 2 at timestamp 26075
+Visitor 1004 is at step-1 at timestamp 26075
+Visitor 1007 is at E (entered Gallery 2) at timestamp 27075
+Visitor 1009 is at D (exiting Gallery 1) at timestamp 27075
+Visitor 1008 is at C (entered Gallery 1) at timestamp 27075
+Visitor 1004 is at step 2 at timestamp 27075
+Visitor 1010 is at step-1 at timestamp 27076
+Visitor 2006 is at step 3 at timestamp 27075
+Visitor 1009 is at E (entered Gallery 2) at timestamp 28075
+Visitor 1002 is at D (exiting Gallery 1) at timestamp 28076
+Visitor 1004 is at step 3 at timestamp 28076
+Visitor 2006 is at C (entered Gallery 1) at timestamp 28076
+Visitor 1005 is at step-1 at timestamp 28076
+Visitor 1010 is at step 2 at timestamp 28076
+Visitor 1002 is at E (entered Gallery 2) at timestamp 29076
+Visitor 2002 is at D (exiting Gallery 1) at timestamp 29077
+Visitor 1004 is at C (entered Gallery 1) at timestamp 29077
+Visitor 1010 is at step 3 at timestamp 29077
+Visitor 1005 is at step 2 at timestamp 29077
+Visitor 2001 is at step-1 at timestamp 29077
+Visitor 2002 is at E (entered Gallery 2) at timestamp 30077
+Visitor 1006 is at D (exiting Gallery 1) at timestamp 30078
+Visitor 1010 is at C (entered Gallery 1) at timestamp 30079
+Visitor 1005 is at step 3 at timestamp 30079
+Visitor 2001 is at step 2 at timestamp 30080
+Visitor 1003 is at step-1 at timestamp 30080
+Visitor 1006 is at E (entered Gallery 2) at timestamp 31079
+Visitor 1001 is at D (exiting Gallery 1) at timestamp 32076
+Visitor 1005 is at C (entered Gallery 1) at timestamp 32076
+Visitor 2001 is at step 3 at timestamp 32076
+Visitor 1003 is at step 2 at timestamp 32076
+Visitor 2003 is at step-1 at timestamp 32076
+Visitor 1008 is at D (exiting Gallery 1) at timestamp 33076
+Visitor 1001 is at E (entered Gallery 2) at timestamp 33076
+Visitor 2001 is at C (entered Gallery 1) at timestamp 33077
+Visitor 1003 is at step 3 at timestamp 33077
+Visitor 2003 is at step 2 at timestamp 33077
+Visitor 2004 is at step-1 at timestamp 33077
+Visitor 1007 is about to enter the photobooth at timestamp 34075
+Visitor 1008 is at E (entered Gallery 2) at timestamp 34077
+Visitor 2006 is at D (exiting Gallery 1) at timestamp 34077
+Visitor 1003 is at C (entered Gallery 1) at timestamp 34077
+Visitor 2003 is at step 3 at timestamp 34078
+Visitor 2004 is at step 2 at timestamp 34078
+Visitor 2005 is at step-1 at timestamp 34078
+Visitor 1009 is about to enter the photobooth at timestamp 35076
+Visitor 1007 is inside the photobooth at timestamp 35076
+Visitor 1004 is at D (exiting Gallery 1) at timestamp 35077
+Visitor 2006 is at E (entered Gallery 2) at timestamp 35077
+Visitor 2003 is at C (entered Gallery 1) at timestamp 35078
+Visitor 2004 is at step 3 at timestamp 35078
+Visitor 2005 is at step 2 at timestamp 35078
+Visitor 1009 is inside the photobooth at timestamp 36077
+Visitor 1002 is about to enter the photobooth at timestamp 36077
+Visitor 1004 is at E (entered Gallery 2) at timestamp 36078
+Visitor 1010 is at D (exiting Gallery 1) at timestamp 36079
+Visitor 2004 is at C (entered Gallery 1) at timestamp 36079
+Visitor 2005 is at step 3 at timestamp 36080
+Visitor 1002 is inside the photobooth at timestamp 37078
+Visitor 2002 is about to enter the photobooth at timestamp 37078
+Visitor 1010 is at E (entered Gallery 2) at timestamp 37080
+Visitor 1005 is at D (exiting Gallery 1) at timestamp 38076
+Visitor 2005 is at C (entered Gallery 1) at timestamp 38076
+Visitor 1006 is about to enter the photobooth at timestamp 38079
+Visitor 2001 is at D (exiting Gallery 1) at timestamp 39077
+Visitor 1005 is at E (entered Gallery 2) at timestamp 39077
+Visitor 2002 is inside the photobooth at timestamp 39078
+Visitor 1001 is about to enter the photobooth at timestamp 40077
+Visitor 2001 is at E (entered Gallery 2) at timestamp 40077
+Visitor 1003 is at D (exiting Gallery 1) at timestamp 40078
+Visitor 1008 is about to enter the photobooth at timestamp 41077
+Visitor 1003 is at E (entered Gallery 2) at timestamp 41078
+Visitor 2003 is at D (exiting Gallery 1) at timestamp 41078
+Visitor 1006 is inside the photobooth at timestamp 41079
+Visitor 1001 is inside the photobooth at timestamp 41079
+Visitor 1008 is inside the photobooth at timestamp 42078
+Visitor 2006 is about to enter the photobooth at timestamp 42078
+Visitor 2003 is at E (entered Gallery 2) at timestamp 42078
+Visitor 2004 is at D (exiting Gallery 1) at timestamp 42080
+Visitor 1004 is about to enter the photobooth at timestamp 43078
+Visitor 2004 is at E (entered Gallery 2) at timestamp 43080
+Visitor 2005 is at D (exiting Gallery 1) at timestamp 44077
+Visitor 2006 is inside the photobooth at timestamp 44078
+Visitor 1010 is about to enter the photobooth at timestamp 44080
+Visitor 2005 is at E (entered Gallery 2) at timestamp 45077
+Visitor 1005 is about to enter the photobooth at timestamp 46078
+Visitor 1004 is inside the photobooth at timestamp 46079
+Visitor 1010 is inside the photobooth at timestamp 46079
+Visitor 2001 is about to enter the photobooth at timestamp 47078
+Visitor 1005 is inside the photobooth at timestamp 47078
+Visitor 1003 is about to enter the photobooth at timestamp 48078
+Visitor 2001 is inside the photobooth at timestamp 49079
+Visitor 2003 is about to enter the photobooth at timestamp 49079
+Visitor 2004 is about to enter the photobooth at timestamp 50081
+Visitor 2003 is inside the photobooth at timestamp 51080
+Visitor 2005 is about to enter the photobooth at timestamp 52078
+Visitor 2004 is inside the photobooth at timestamp 53081
+Visitor 2005 is inside the photobooth at timestamp 55082
+Visitor 1003 is inside the photobooth at timestamp 57083
