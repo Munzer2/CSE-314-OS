@@ -89,7 +89,7 @@ void Premium(int ID, int _wait) {
     pthread_mutex_lock(&PBLock); 
     ///Take time using the photo booth.
     print_mssg("Visitor " + to_string(ID) + " is inside the photobooth at timestamp " + to_string(get_timestamp()) + "\n");
-    usleep(_wait*2000); 
+    usleep((_wait == 0 ? 2000 : _wait*2000)); 
     pthread_mutex_unlock(&PBLock);
 
     pthread_mutex_lock(&PremLock); 
@@ -110,7 +110,7 @@ void Standard(int ID, int _wait) {
     pthread_mutex_unlock(&accessLock); 
     print_mssg("Visitor " + to_string(ID) + " is inside the photobooth at timestamp " + to_string(get_timestamp()) + "\n");
     ///Take time using the PB
-    usleep(_wait*2000); 
+    usleep((_wait == 0 ? 2000 : _wait*2000)); 
     pthread_mutex_lock(&standLock); 
     st_cnt--;
     if(st_cnt == 0) pthread_mutex_unlock(&PBLock); 
@@ -120,7 +120,7 @@ void Standard(int ID, int _wait) {
 
 void *visitMuseam(void *arg) {
     _visitor *vis = (_visitor *)arg; 
-    usleep(get_random_number()%1000 + 1000);
+    usleep(get_random_number()%1000 + 2000);
     print_mssg("Visitor " + to_string(vis->ID) + " has arrived at A at timestamp " + to_string(get_timestamp()) + "\n");   
     usleep((vis->w == 0 ? 1000 : vis->w*1000)); 
     pthread_mutex_lock(&stairs[0]);
@@ -139,7 +139,7 @@ void *visitMuseam(void *arg) {
     pthread_mutex_unlock(&stairs[2]);   
     print_mssg("Visitor " + to_string(vis->ID) + " is at C (entered Gallery 1) at timestamp " + to_string(get_timestamp()) + "\n");
 
-    usleep(vis->x * 1000); 
+    usleep((vis->x == 0 ? 1000 : vis->x*1000)); 
 
     sem_wait(&corr_DE_cap);   
     sem_post(&gal1_cap); 
@@ -150,7 +150,7 @@ void *visitMuseam(void *arg) {
 
     print_mssg("Visitor " + to_string(vis->ID) + " is at E (entered Gallery 2) at timestamp " + to_string(get_timestamp()) + "\n");
 
-    usleep(vis->y* 1000);
+    usleep((vis->y == 0 ? 1000 : vis->y*1000));
 
     print_mssg("Visitor " + to_string(vis->ID) + " is about to enter the photobooth at timestamp " + to_string(get_timestamp()) + "\n");
 
